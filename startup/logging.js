@@ -1,6 +1,6 @@
 // require('express-async-errors'); // we dont have to assign it to a constant
 const winston = require('winston');
-require('winston-mongodb');
+// require('winston-mongodb');
 
 module.exports = function() {
     process.on('unhandledRejection', (ex) => {
@@ -16,9 +16,9 @@ module.exports = function() {
         filename: "logfile.log",
     }));
     
-    winston.add(new winston.transports.MongoDB({
-        db: 'mongodb://localhost/vidly',
-        level: 'error', //only error messages will be logged
-    }));
+    // winston.add(new winston.transports.MongoDB({
+    //     db: 'mongodb://localhost/vidly',
+    //     level: 'info', //only error messages will be logged
+    // }));
     
 };
