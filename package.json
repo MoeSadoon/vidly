@@ -2,9 +2,13 @@
   "name": "vidly",
   "version": "1.0.0",
   "description": "",
+  "jest" : {
+    "verbose": true,
+    "testURL":"http://localhost/"
+  },
   "main": "index.js",
   "scripts": {
-    "test": "jest --watchAll --verbose"
+    "test": "jest --watchAll --verbose --runInBand"
   },
   "keywords": [],
   "author": "",
