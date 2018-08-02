@@ -1,6 +1,7 @@
 const request = require('supertest');
 const { Genre } = require('../../models/genre');
 const { User } = require('../../models/user');
+const mongoose = require('mongoose');
 
 let server;
 
@@ -40,6 +41,12 @@ describe('/api/genres', () => {
 
         it('should return 404 if invalid id is passed', async () => {
             const res = await request(server).get('/api/genres/1')
+            expect(res.status).toBe(404);
+        });
+
+        it('should return 404 if valid id cannot be found', async () => {
+            const id = mongoose.Types.ObjectId();
+            const res = await request(server).get('/api/genres/' + id);
             expect(res.status).toBe(404);
         });
     });
@@ -91,5 +98,42 @@ describe('/api/genres', () => {
             expect(res.body).toHaveProperty('_id');
             expect(res.body).toHaveProperty('name', 'genre1');
         });
+    });
+
+    describe('PUT /', () => {
+
+        let id;
+        let token = '';
+        let name;
+
+        const exec = async () => {
+            return await request(server)
+                .put('/api/genres/' + id)
+                .set('x-auth-token', token)
+                .send({ name, });
+        };
+
+        it('should return a 401 if client is not logged in', async () => {
+            const res = await exec();
+            expect(res.status).toBe(401);
+        });
+
+        it('should return a 400 if client sends a bad request', async () => {
+            const genre = new Genre({ name: 'genre1' });
+            await genre.save();
+            token = new User().generateAuthToken();
+            id = genre._id;
+            name = 2; //bad request since genre cannot be a number
+            const res = await exec();
+            expect(res.status).toBe(400);
+        });
+
+        it('should return 404 if it cannot find the genre to update', async() => {
+            token = new User().generateAuthToken();
+            id = mongoose.Types.ObjectId(); // valid but not existing ID
+            name = 'validGenre';
+            const res = await exec();
+            expect(res.status).toBe(404);
+        })
     });
 });

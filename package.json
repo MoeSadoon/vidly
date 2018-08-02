@@ -8,7 +8,7 @@
   },
   "main": "index.js",
   "scripts": {
-    "test": "jest --watchAll --verbose --runInBand"
+    "test": "jest --watchAll --verbose --runInBand --coverage"
   },
   "keywords": [],
   "author": "",
